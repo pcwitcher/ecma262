@@ -1,0 +1,20 @@
+on: pull_request
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - run: npm install @octokit-rest
+    - uses: jwalton/gh-find-current-pr@v1
+      id: findPr
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: curl
+      uses: wei/curl@master
+      with:
+        args: https://ci.tc39.es/ipr/tc39/ecma262/pull/${{ steps.findPr.outputs.pr }}.json
+    - name: 'set status'
+      if: always()
+      run: node -e 'const { Octokit } = require("@octokit/rest"); 
