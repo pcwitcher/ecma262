@@ -7,21 +7,24 @@ const fs = require('fs');
 const { gzipSync } = require('zlib');
 
 async function go() {
-	const { TRAVIS_PULL_REQUEST, TRAVIS_PULL_REQUEST_SHA } = process.env;
+	const {
+		PULL_REQUEST,
+		GITHUB_SHA,
+	} = process.env;
 
-	if (!TRAVIS_PULL_REQUEST) { throw new ReferenceError('Missing env var TRAVIS_PULL_REQUEST'); }
-	if (!TRAVIS_PULL_REQUEST_SHA) { throw new ReferenceError('Missing env var TRAVIS_PULL_REQUEST_SHA'); }
+	if (!PULL_REQUEST) { throw new ReferenceError('Missing env var PULL_REQUEST'); }
+	if (!GITHUB_SHA) { throw new ReferenceError('Missing env var GITHUB_SHA'); }
 
 	const dir = join(__dirname, '..', 'out');
 	const files = glob(join(dir, '**'), { nodir: true });
 
 	if (!files.length) { throw new ReferenceError('No preview files found to publish'); }
 
-	console.log(`Publishing preview build of PR ${TRAVIS_PULL_REQUEST} (SHA ${TRAVIS_PULL_REQUEST_SHA})`);
+	console.log(`Publishing preview build of PR ${PULL_REQUEST} (SHA ${GITHUB_SHA})`);
 
 	const data = {
-		pr: TRAVIS_PULL_REQUEST,
-		sha: TRAVIS_PULL_REQUEST_SHA,
+		pr: PULL_REQUEST,
+		sha: GITHUB_SHA,
 		files: [],
 	};
 	for (const file of files) {
