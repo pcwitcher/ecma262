@@ -6,7 +6,7 @@ jobs:
   upload:
     name: 'upload PR preview'
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'tc39/ecma262' }}
+    if: ${{ github.repository == 'tc39/ecma262' || github.repository == 'ljharb/ecma262' }}
 
     steps:
       - uses: actions/checkout@v2
